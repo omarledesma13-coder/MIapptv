@@ -1,0 +1,23 @@
+name: Build APK 2026
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build con Gradle
+        run: |
+          mkdir -p app/src/main/java/com/mitv/pro
+          echo "android.useAndroidX=true" > gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
+          gradle wrapper --gradle-version 8.5
+          ./gradlew assembleDebug --no-daemon
+      - name: Subir APK Final
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reproductor_IPTV_Pro_2026
+          path: app/build/outputs/apk/debug/app-debug.apk
